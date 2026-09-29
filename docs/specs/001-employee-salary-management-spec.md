@@ -196,10 +196,10 @@ From the Profile screen, the HR Manager deactivates an employee who has left the
 
 **Acceptance criteria**
 
-- [ ] **5.7.1** `POST /api/employees/{id}/deactivate` sets status to Inactive and returns the updated record; the row still exists afterward (invariant 4.3).
+- [x] **5.7.1** `POST /api/employees/{id}/deactivate` sets status to Inactive and returns the updated record; the row still exists afterward (invariant 4.3).
 - [ ] **5.7.2** A deactivated employee is excluded from default (Active-only) aggregate figures anywhere the system reports them, per [invariant 4.4](#4-invariants).
-- [ ] **5.7.3** Deactivating an already-Inactive employee is idempotent — a second call returns 200 with no error, status stays Inactive.
-- [ ] **5.7.4** The Directory and Profile screens visibly label Inactive employees (e.g. a status badge), never hiding the distinction.
+- [x] **5.7.3** Deactivating an already-Inactive employee is idempotent — a second call returns 200 with no error, status stays Inactive.
+- [x] **5.7.4** The Directory and Profile screens visibly label Inactive employees (e.g. a status badge), never hiding the distinction.
 
 ### 5.8 View org-wide pay analytics
 
