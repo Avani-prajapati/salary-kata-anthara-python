@@ -66,3 +66,10 @@ def update_employee(
     service = EmployeeService(EmployeeRepository(db))
     employee = service.update_employee(employee_id, payload)
     return EmployeeRead.model_validate(employee)
+
+
+@router.post("/{employee_id}/deactivate", response_model=EmployeeRead)
+def deactivate_employee(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRead:
+    service = EmployeeService(EmployeeRepository(db))
+    employee = service.deactivate_employee(employee_id)
+    return EmployeeRead.model_validate(employee)

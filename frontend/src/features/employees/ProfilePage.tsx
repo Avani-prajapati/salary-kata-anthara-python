@@ -1,12 +1,14 @@
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography } from "@mui/material";
-import { useEmployeeQuery } from "./api";
+import { StatusBadge } from "../../shared/ui/StatusBadge";
+import { useEmployeeQuery, useDeactivateEmployeeMutation } from "./api";
 
 export function ProfilePage() {
   const { employeeId: employeeIdParam } = useParams<{ employeeId: string }>();
   const employeeId = employeeIdParam ? parseInt(employeeIdParam, 10) : 0;
 
   const { data: employee, isLoading, isError } = useEmployeeQuery(employeeId);
+  const deactivateMutation = useDeactivateEmployeeMutation(employeeId);
 
   if (isLoading) {
     return (
@@ -20,15 +22,31 @@ export function ProfilePage() {
     return <Alert severity="error">Failed to load employee profile.</Alert>;
   }
 
+  const handleDeactivate = () => {
+    deactivateMutation.mutate();
+  };
+
   return (
     <Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 2 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Employee Profile
         </Typography>
-        <Button component={RouterLink} to={`/employees/${employeeId}/edit`} variant="outlined">
-          Edit
-        </Button>
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Button component={RouterLink} to={`/employees/${employeeId}/edit`} variant="outlined">
+            Edit
+          </Button>
+          {employee.status === "active" && (
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleDeactivate}
+              disabled={deactivateMutation.isPending}
+            >
+              Deactivate
+            </Button>
+          )}
+        </Box>
       </Box>
       <Card>
         <CardContent>
@@ -87,9 +105,7 @@ export function ProfilePage() {
               <Typography variant="subtitle2" color="textSecondary">
                 Status
               </Typography>
-              <Typography variant="body1" sx={{ textTransform: "capitalize" }}>
-                {employee.status}
-              </Typography>
+              <StatusBadge status={employee.status} />
             </Grid>
           </Grid>
         </CardContent>

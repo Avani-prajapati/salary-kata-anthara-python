@@ -82,3 +82,8 @@ class EmployeeService:
             country_id=country_id,
             status=status,
         )
+
+    def deactivate_employee(self, employee_id: int) -> Employee:
+        employee = self.get_employee(employee_id)
+        employee.status = EmployeeStatus.INACTIVE
+        return self.repository.update(employee)

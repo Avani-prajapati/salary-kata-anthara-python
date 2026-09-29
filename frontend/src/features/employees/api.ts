@@ -172,3 +172,20 @@ export function useUpdateEmployeeMutation(
     },
   });
 }
+
+export function useDeactivateEmployeeMutation(
+  employeeId: number,
+): UseMutationResult<Employee, ApiError, void> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const wire = await apiPost<EmployeeWire>(`/api/employees/${employeeId}/deactivate`, {});
+      return mapEmployee(wire);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employee", employeeId] });
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
+}

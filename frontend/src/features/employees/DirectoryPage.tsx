@@ -7,9 +7,11 @@ import {
   type GridEventListener,
   type GridPaginationModel,
   type GridRowParams,
+  type GridRenderCellParams,
   type GridSortModel,
   type GridValueGetterParams,
 } from "@mui/x-data-grid";
+import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { FilterBar, type FilterState } from "./FilterBar";
 import { useEmployeesQuery, type EmployeeSortField } from "./api";
 import type { Employee } from "./types";
@@ -37,7 +39,15 @@ const COLUMNS: GridColDef<Employee>[] = [
     valueGetter: (params: GridValueGetterParams<Employee>) =>
       `${params.row.salaryAmount} ${params.row.salaryCurrency}`,
   },
-  { field: "status", headerName: "Status", flex: 1, sortable: false },
+  {
+    field: "status",
+    headerName: "Status",
+    flex: 1,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams<Employee>) => (
+      <StatusBadge status={params.row.status} />
+    ),
+  },
 ];
 
 export function DirectoryPage() {
