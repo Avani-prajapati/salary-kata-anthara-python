@@ -3,7 +3,7 @@ from __future__ import annotations
 from app.core import reference_data
 from app.core.errors import InvalidReferenceError, NotFoundError
 from app.employees.models import Employee, EmployeeStatus
-from app.employees.repository import EmployeeRepository
+from app.employees.repository import EmployeeRepository, SalaryRow
 from app.employees.schemas import EmployeeCreate, EmployeeUpdate
 
 ALLOWED_SORT_COLUMNS: frozenset[str] = frozenset(
@@ -87,3 +87,6 @@ class EmployeeService:
         employee = self.get_employee(employee_id)
         employee.status = EmployeeStatus.INACTIVE
         return self.repository.update(employee)
+
+    def salary_rows_for_analytics(self, *, include_inactive: bool) -> list[SalaryRow]:
+        return self.repository.salary_rows_for_analytics(include_inactive=include_inactive)

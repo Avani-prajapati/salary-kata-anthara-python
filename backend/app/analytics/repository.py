@@ -4,20 +4,14 @@ from collections import defaultdict
 from decimal import Decimal
 from typing import Literal
 
-from sqlalchemy import Select, Table, select
-from sqlalchemy.orm import Session
-
-from app.core.db import Base
-
-EMPLOYEES_TABLE_NAME = "employees"
-ACTIVE_STATUS = "active"
+from app.employees.service import EmployeeService
 
 Salary = tuple[Decimal, str]
 
 
 class AnalyticsRepository:
-    def __init__(self, db: Session) -> None:
-        self.db = db
+    def __init__(self, employee_service: EmployeeService) -> None:
+        self.employee_service = employee_service
 
     def salaries_grouped_by(
         self,
@@ -25,27 +19,18 @@ class AnalyticsRepository:
         group_column: Literal["department_id", "country_id"],
         include_inactive: bool,
     ) -> dict[str, list[Salary]]:
-        employees = _employees_table()
-        query = select(
-            employees.c[group_column], employees.c.salary_amount, employees.c.salary_currency
-        )
+        group_index = 0 if group_column == "department_id" else 1
         salaries_by_group: dict[str, list[Salary]] = defaultdict(list)
-        for group_id, amount, currency in self.db.execute(_restrict(query, include_inactive)):
-            salaries_by_group[group_id].append((amount, currency))
+        for row in self._salary_rows(include_inactive=include_inactive):
+            salaries_by_group[row[group_index]].append((row[2], row[3]))
         return dict(salaries_by_group)
 
     def all_salaries(self, *, include_inactive: bool) -> list[Salary]:
-        employees = _employees_table()
-        query = select(employees.c.salary_amount, employees.c.salary_currency)
-        rows = self.db.execute(_restrict(query, include_inactive))
-        return [(amount, currency) for amount, currency in rows]
+        return [
+            (row[2], row[3]) for row in self._salary_rows(include_inactive=include_inactive)
+        ]
 
-
-def _employees_table() -> Table:
-    return Base.metadata.tables[EMPLOYEES_TABLE_NAME]
-
-
-def _restrict(query: Select, include_inactive: bool) -> Select:
-    if include_inactive:
-        return query
-    return query.where(_employees_table().c.status == ACTIVE_STATUS)
+    def _salary_rows(
+        self, *, include_inactive: bool
+    ) -> list[tuple[str, str, Decimal, str]]:
+        return self.employee_service.salary_rows_for_analytics(include_inactive=include_inactive)

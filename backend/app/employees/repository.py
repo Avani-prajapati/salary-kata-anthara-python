@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+from decimal import Decimal
+
 from sqlalchemy import and_, asc, desc, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.employees.models import Employee, EmployeeStatus
+
+SalaryRow = tuple[str, str, Decimal, str]
 
 
 class EmployeeRepository:
@@ -80,3 +84,14 @@ class EmployeeRepository:
             .all()
         )
         return list(rows), total
+
+    def salary_rows_for_analytics(self, *, include_inactive: bool) -> list[SalaryRow]:
+        query = select(
+            Employee.department_id,
+            Employee.country_id,
+            Employee.salary_amount,
+            Employee.salary_currency,
+        )
+        if not include_inactive:
+            query = query.where(Employee.status == EmployeeStatus.ACTIVE)
+        return [tuple(row) for row in self.db.execute(query)]

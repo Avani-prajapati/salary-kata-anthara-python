@@ -7,6 +7,8 @@ from app.analytics.repository import AnalyticsRepository
 from app.analytics.schemas import CountryAggregate, DepartmentAggregate, PayBandBucket
 from app.analytics.service import AnalyticsService
 from app.core.db import get_db
+from app.employees.repository import EmployeeRepository
+from app.employees.service import EmployeeService
 
 router = APIRouter(prefix="/api/analytics", tags=["analytics"])
 
@@ -16,7 +18,7 @@ def department_analytics(
     include_inactive: bool = Query(False, alias="includeInactive"),
     db: Session = Depends(get_db),
 ) -> list[DepartmentAggregate]:
-    service = AnalyticsService(AnalyticsRepository(db))
+    service = AnalyticsService(AnalyticsRepository(EmployeeService(EmployeeRepository(db))))
     return service.department_aggregates(include_inactive=include_inactive)
 
 
@@ -25,7 +27,7 @@ def country_analytics(
     include_inactive: bool = Query(False, alias="includeInactive"),
     db: Session = Depends(get_db),
 ) -> list[CountryAggregate]:
-    service = AnalyticsService(AnalyticsRepository(db))
+    service = AnalyticsService(AnalyticsRepository(EmployeeService(EmployeeRepository(db))))
     return service.country_aggregates(include_inactive=include_inactive)
 
 
@@ -34,5 +36,5 @@ def pay_band_analytics(
     include_inactive: bool = Query(False, alias="includeInactive"),
     db: Session = Depends(get_db),
 ) -> list[PayBandBucket]:
-    service = AnalyticsService(AnalyticsRepository(db))
+    service = AnalyticsService(AnalyticsRepository(EmployeeService(EmployeeRepository(db))))
     return service.pay_band_distribution(include_inactive=include_inactive)
