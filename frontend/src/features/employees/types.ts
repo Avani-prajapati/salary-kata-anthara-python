@@ -20,3 +20,14 @@ export interface Page<T> {
   page: number;
   pageSize: number;
 }
+
+export interface EmployeeFormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  jobTitle: string;
+  departmentId: string;
+  countryId: string;
+  hireDate: string;
+  salaryAmount: string;
+}

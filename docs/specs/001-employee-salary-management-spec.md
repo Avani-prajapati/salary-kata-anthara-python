@@ -167,12 +167,12 @@ The HR Manager fills a form (name, email, department, country, job title, hire d
 
 **Acceptance criteria**
 
-- [ ] **5.5.1** `POST /api/employees` with a fully valid payload creates an employee and returns 201 with the created record including its new id.
-- [ ] **5.5.2** `POST /api/employees` with a negative or zero salary returns 422 with a field-level error, and no row is created (invariant 4.2).
-- [ ] **5.5.3** `POST /api/employees` with a missing required field (e.g. no department) returns 422 listing every invalid field, not just the first.
-- [ ] **5.5.4** `POST /api/employees` with a malformed email returns 422 without reaching the database.
-- [ ] **5.5.5** The salary currency is set automatically from the selected country and is not a free-text or independently editable field on the Add form (invariant 4.5).
-- [ ] **5.5.6** Name, email, and date-of-hire inputs on the Add form carry appropriate `autocomplete` attributes (Accessibility Checklist).
+- [x] **5.5.1** `POST /api/employees` with a fully valid payload creates an employee and returns 201 with the created record including its new id.
+- [x] **5.5.2** `POST /api/employees` with a negative or zero salary returns 422 with a field-level error, and no row is created (invariant 4.2).
+- [x] **5.5.3** `POST /api/employees` with a missing required field (e.g. no department) returns 422 listing every invalid field, not just the first.
+- [x] **5.5.4** `POST /api/employees` with a malformed email returns 422 without reaching the database.
+- [x] **5.5.5** The salary currency is set automatically from the selected country and is not a free-text or independently editable field on the Add form (invariant 4.5).
+- [x] **5.5.6** Name, email, and date-of-hire inputs on the Add form carry appropriate `autocomplete` attributes (Accessibility Checklist).
 
 ### 5.6 Edit an employee's details and salary
 

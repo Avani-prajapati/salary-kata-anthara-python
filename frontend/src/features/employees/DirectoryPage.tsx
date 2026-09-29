@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Box, Typography } from "@mui/material";
+import { Alert, Box, Button, Stack, Typography } from "@mui/material";
 import {
   DataGrid,
   type GridColDef,
@@ -67,9 +67,14 @@ export function DirectoryPage() {
 
   return (
     <Box>
-      <Typography variant="h5" component="h1" gutterBottom>
-        Employee Directory
-      </Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+        <Typography variant="h5" component="h1">
+          Employee Directory
+        </Typography>
+        <Button variant="contained" onClick={() => navigate("/employees/new")}>
+          Add Employee
+        </Button>
+      </Stack>
       <FilterBar value={filters} onChange={setFilters} />
       {isError ? <Alert severity="error">Failed to load employees.</Alert> : null}
       {hasNoResults ? (

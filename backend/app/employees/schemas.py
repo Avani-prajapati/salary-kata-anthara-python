@@ -4,11 +4,22 @@ from datetime import date
 from decimal import Decimal
 from typing import Generic, TypeVar
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from app.employees.models import EmployeeStatus
 
 T = TypeVar("T")
+
+
+class EmployeeCreate(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    job_title: str
+    department_id: str
+    country_id: str
+    hire_date: date
+    salary_amount: Decimal = Field(gt=0)
 
 
 class EmployeeRead(BaseModel):

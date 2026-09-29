@@ -1,6 +1,13 @@
-import { keepPreviousData, useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { apiGet } from "../../shared/api/client";
-import type { Employee, Page } from "./types";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type UseMutationResult,
+  type UseQueryResult,
+} from "@tanstack/react-query";
+import { apiGet, apiPost, type ApiError } from "../../shared/api/client";
+import type { Employee, EmployeeFormValues, Page } from "./types";
 
 export type EmployeeSortField = "lastName" | "departmentId" | "countryId" | "salaryAmount" | "hireDate";
 
@@ -95,6 +102,33 @@ export function useEmployeeQuery(employeeId: number): UseQueryResult<Employee> {
     queryFn: async () => {
       const wire = await apiGet<EmployeeWire>(`/api/employees/${employeeId}`);
       return mapEmployee(wire);
+    },
+  });
+}
+
+function toEmployeeCreateWire(values: EmployeeFormValues) {
+  return {
+    first_name: values.firstName,
+    last_name: values.lastName,
+    email: values.email,
+    job_title: values.jobTitle,
+    department_id: values.departmentId,
+    country_id: values.countryId,
+    hire_date: values.hireDate,
+    salary_amount: values.salaryAmount,
+  };
+}
+
+export function useCreateEmployeeMutation(): UseMutationResult<Employee, ApiError, EmployeeFormValues> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (values: EmployeeFormValues) => {
+      const wire = await apiPost<EmployeeWire>("/api/employees", toEmployeeCreateWire(values));
+      return mapEmployee(wire);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });
 }

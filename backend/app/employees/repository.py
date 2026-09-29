@@ -20,6 +20,12 @@ class EmployeeRepository:
     def get_by_id(self, employee_id: int) -> Employee | None:
         return self.db.scalar(select(Employee).where(Employee.id == employee_id))
 
+    def create(self, employee: Employee) -> Employee:
+        self.db.add(employee)
+        self.db.commit()
+        self.db.refresh(employee)
+        return employee
+
     def list(
         self,
         *,

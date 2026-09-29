@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.employees.models import EmployeeStatus
 from app.employees.repository import EmployeeRepository
-from app.employees.schemas import EmployeeRead, Page
+from app.employees.schemas import EmployeeCreate, EmployeeRead, Page
 from app.employees.service import EmployeeService
 
 router = APIRouter(prefix="/api/employees", tags=["employees"])
@@ -49,4 +49,11 @@ def list_employees(
 def get_employee(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRead:
     service = EmployeeService(EmployeeRepository(db))
     employee = service.get_employee(employee_id)
+    return EmployeeRead.model_validate(employee)
+
+
+@router.post("", response_model=EmployeeRead, status_code=201)
+def create_employee(payload: EmployeeCreate, db: Session = Depends(get_db)) -> EmployeeRead:
+    service = EmployeeService(EmployeeRepository(db))
+    employee = service.create_employee(payload)
     return EmployeeRead.model_validate(employee)

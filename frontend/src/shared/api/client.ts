@@ -41,3 +41,18 @@ export async function apiGet<T>(path: string, params?: Record<string, string | n
 
   return response.json() as Promise<T>;
 }
+
+export async function apiPost<T>(path: string, body: unknown): Promise<T> {
+  const response = await fetch(buildUrl(path), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const { code, message } = await readErrorBody(response);
+    throw new ApiError(response.status, code, message);
+  }
+
+  return response.json() as Promise<T>;
+}

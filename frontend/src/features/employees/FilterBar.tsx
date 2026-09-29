@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { COUNTRIES, DEPARTMENTS, STATUSES } from "./referenceData";
 import type { EmployeeStatus } from "./types";
 
 export interface FilterState {
@@ -13,36 +14,6 @@ interface FilterBarProps {
   readonly value: FilterState;
   readonly onChange: (next: FilterState) => void;
 }
-
-const DEPARTMENTS: Array<{ id: string; name: string }> = [
-  { id: "engineering", name: "Engineering" },
-  { id: "sales", name: "Sales" },
-  { id: "marketing", name: "Marketing" },
-  { id: "finance", name: "Finance" },
-  { id: "hr", name: "HR" },
-  { id: "operations", name: "Operations" },
-  { id: "customer_support", name: "Customer Support" },
-  { id: "legal", name: "Legal" },
-  { id: "product", name: "Product" },
-];
-
-const COUNTRIES: Array<{ id: string; name: string }> = [
-  { id: "us", name: "United States" },
-  { id: "gb", name: "United Kingdom" },
-  { id: "de", name: "Germany" },
-  { id: "fr", name: "France" },
-  { id: "in", name: "India" },
-  { id: "ca", name: "Canada" },
-  { id: "au", name: "Australia" },
-  { id: "sg", name: "Singapore" },
-  { id: "br", name: "Brazil" },
-  { id: "jp", name: "Japan" },
-];
-
-const STATUSES: Array<{ id: EmployeeStatus; name: string }> = [
-  { id: "active", name: "Active" },
-  { id: "inactive", name: "Inactive" },
-];
 
 function FilterField({ children }: Readonly<{ children: ReactNode }>) {
   return (
