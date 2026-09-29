@@ -99,11 +99,11 @@ flowchart LR
 
 **Acceptance criteria** (markdown checklist; mark `[x]` as the AC is implemented and verified)
 
-- [ ] **5.1.1** Running the seed command against an empty database creates exactly 10,000 Employee rows.
-- [ ] **5.1.2** Running the seed command twice with the same seed value produces byte-identical generated data (same names, same salaries, same distribution) — determinism per invariant 4.2's testability need.
-- [ ] **5.1.3** Every generated employee has a department from the fixed department list, a country from the fixed country list, and a salary currency matching that country's currency (invariant 4.1, 4.5).
-- [ ] **5.1.4** Every generated salary amount is a positive number (invariant 4.2).
-- [ ] **5.1.5** Running the seed command against a non-empty database refuses to run (or requires an explicit `--reset` flag) rather than silently duplicating data.
+- [x] **5.1.1** Running the seed command against an empty database creates exactly 10,000 Employee rows.
+- [x] **5.1.2** Running the seed command twice with the same seed value produces byte-identical generated data (same names, same salaries, same distribution) — determinism per invariant 4.2's testability need.
+- [x] **5.1.3** Every generated employee has a department from the fixed department list, a country from the fixed country list, and a salary currency matching that country's currency (invariant 4.1, 4.5).
+- [x] **5.1.4** Every generated salary amount is a positive number (invariant 4.2).
+- [x] **5.1.5** Running the seed command against a non-empty database refuses to run (or requires an explicit `--reset` flag) rather than silently duplicating data.
 
 ### 5.2 Browse the employee directory
 
