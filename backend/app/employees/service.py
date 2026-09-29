@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.core.errors import InvalidReferenceError
+from app.core.errors import InvalidReferenceError, NotFoundError
 from app.employees.models import Employee, EmployeeStatus
 from app.employees.repository import EmployeeRepository
 
@@ -12,6 +12,12 @@ ALLOWED_SORT_COLUMNS: frozenset[str] = frozenset(
 class EmployeeService:
     def __init__(self, repository: EmployeeRepository) -> None:
         self.repository = repository
+
+    def get_employee(self, employee_id: int) -> Employee:
+        employee = self.repository.get_by_id(employee_id)
+        if employee is None:
+            raise NotFoundError(f"employee {employee_id} not found")
+        return employee
 
     def list_employees(
         self,

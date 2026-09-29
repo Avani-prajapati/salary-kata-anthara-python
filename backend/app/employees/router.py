@@ -43,3 +43,10 @@ def list_employees(
         page=page,
         page_size=page_size,
     )
+
+
+@router.get("/{employee_id}", response_model=EmployeeRead)
+def get_employee(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRead:
+    service = EmployeeService(EmployeeRepository(db))
+    employee = service.get_employee(employee_id)
+    return EmployeeRead.model_validate(employee)

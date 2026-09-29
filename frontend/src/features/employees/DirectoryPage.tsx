@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Alert, Box, Typography } from "@mui/material";
 import {
   DataGrid,
   type GridColDef,
+  type GridEventListener,
   type GridPaginationModel,
+  type GridRowParams,
   type GridSortModel,
   type GridValueGetterParams,
 } from "@mui/x-data-grid";
@@ -38,11 +41,16 @@ const COLUMNS: GridColDef<Employee>[] = [
 ];
 
 export function DirectoryPage() {
+  const navigate = useNavigate();
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>(DEFAULT_SORT_MODEL);
   const [filters, setFilters] = useState<FilterState>({});
 
   const activeSort = sortModel[0];
+
+  const handleRowClick: GridEventListener<"rowClick"> = (params: GridRowParams<Employee>) => {
+    navigate(`/employees/${params.row.id}`);
+  };
 
   const { data, isLoading, isError } = useEmployeesQuery({
     page: paginationModel.page + 1,
@@ -82,6 +90,8 @@ export function DirectoryPage() {
           pageSizeOptions={PAGE_SIZE_OPTIONS}
           sortModel={sortModel}
           onSortModelChange={setSortModel}
+          onRowClick={handleRowClick}
+          sx={{ cursor: "pointer" }}
         />
       </Box>
     </Box>

@@ -141,11 +141,11 @@ The HR Manager narrows the directory by typing a name/email fragment and/or pick
 
 **Acceptance criteria**
 
-- [ ] **5.3.1** `GET /api/employees?q=<fragment>` returns only employees whose name or email contains the fragment, case-insensitively.
-- [ ] **5.3.2** `GET /api/employees?department=<id>&country=<id>&status=active` combines all three filters with AND semantics.
-- [ ] **5.3.3** Filters and search combine with pagination and sorting from [slice 5.2](#52-browse-the-employee-directory) without conflicting query parameters.
-- [ ] **5.3.4** A search/filter combination matching zero employees renders an explicit "no matching employees" empty state, not a blank table.
-- [ ] **5.3.5** Filter dropdown inputs carry accessible labels associated via `<label for>` or `aria-label`, not placeholder-only labeling.
+- [x] **5.3.1** `GET /api/employees?q=<fragment>` returns only employees whose name or email contains the fragment, case-insensitively.
+- [x] **5.3.2** `GET /api/employees?department=<id>&country=<id>&status=active` combines all three filters with AND semantics.
+- [x] **5.3.3** Filters and search combine with pagination and sorting from [slice 5.2](#52-browse-the-employee-directory) without conflicting query parameters.
+- [x] **5.3.4** A search/filter combination matching zero employees renders an explicit "no matching employees" empty state, not a blank table.
+- [x] **5.3.5** Filter dropdown inputs carry accessible labels associated via `<label for>` or `aria-label`, not placeholder-only labeling.
 
 ### 5.4 View an employee's full profile
 
@@ -155,9 +155,9 @@ Clicking a directory row opens that employee's full profile — every field the 
 
 **Acceptance criteria**
 
-- [ ] **5.4.1** `GET /api/employees/{id}` returns the full record for a valid id.
-- [ ] **5.4.2** `GET /api/employees/{id}` for a non-existent id returns 404 with a `{code, message}` body, not a 500.
-- [ ] **5.4.3** The Profile screen is reachable only via a directory row (per [§5](#5-slices) reachability), and its URL is directly bookmarkable/shareable (e.g. `/employees/{id}`).
+- [x] **5.4.1** `GET /api/employees/{id}` returns the full record for a valid id.
+- [x] **5.4.2** `GET /api/employees/{id}` for a non-existent id returns 404 with a `{code, message}` body, not a 500.
+- [x] **5.4.3** The Profile screen is reachable only via a directory row (per [§5](#5-slices) reachability), and its URL is directly bookmarkable/shareable (e.g. `/employees/{id}`).
 
 ### 5.5 Add a new employee
 

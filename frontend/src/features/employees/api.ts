@@ -88,3 +88,13 @@ export function useEmployeesQuery(params: EmployeesQueryParams): UseQueryResult<
     },
   });
 }
+
+export function useEmployeeQuery(employeeId: number): UseQueryResult<Employee> {
+  return useQuery({
+    queryKey: ["employee", employeeId],
+    queryFn: async () => {
+      const wire = await apiGet<EmployeeWire>(`/api/employees/${employeeId}`);
+      return mapEmployee(wire);
+    },
+  });
+}

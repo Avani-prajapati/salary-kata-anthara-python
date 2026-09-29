@@ -17,6 +17,9 @@ class EmployeeRepository:
     def count_all(self) -> int:
         return self.db.scalar(select(func.count()).select_from(Employee)) or 0
 
+    def get_by_id(self, employee_id: int) -> Employee | None:
+        return self.db.scalar(select(Employee).where(Employee.id == employee_id))
+
     def list(
         self,
         *,
