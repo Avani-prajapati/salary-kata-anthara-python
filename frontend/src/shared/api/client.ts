@@ -31,22 +31,17 @@ async function readErrorBody(response: Response): Promise<{ code: string; messag
   }
 }
 
-export async function apiGet<T>(path: string, params?: Record<string, string | number>): Promise<T> {
-  const response = await fetch(buildUrl(path, params));
-
-  if (!response.ok) {
-    const { code, message } = await readErrorBody(response);
-    throw new ApiError(response.status, code, message);
-  }
-
-  return response.json() as Promise<T>;
-}
-
-export async function apiPost<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(buildUrl(path), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+async function request<T>(
+  method: "GET" | "POST" | "PATCH",
+  path: string,
+  options?: { params?: Record<string, string | number>; body?: unknown },
+): Promise<T> {
+  const response = await fetch(buildUrl(path, options?.params), {
+    method,
+    ...(options?.body !== undefined && {
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(options.body),
+    }),
   });
 
   if (!response.ok) {
@@ -57,17 +52,14 @@ export async function apiPost<T>(path: string, body: unknown): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
-  const response = await fetch(buildUrl(path), {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+export function apiGet<T>(path: string, params?: Record<string, string | number>): Promise<T> {
+  return request<T>("GET", path, { params });
+}
 
-  if (!response.ok) {
-    const { code, message } = await readErrorBody(response);
-    throw new ApiError(response.status, code, message);
-  }
+export function apiPost<T>(path: string, body: unknown): Promise<T> {
+  return request<T>("POST", path, { body });
+}
 
-  return response.json() as Promise<T>;
+export function apiPatch<T>(path: string, body: unknown): Promise<T> {
+  return request<T>("PATCH", path, { body });
 }

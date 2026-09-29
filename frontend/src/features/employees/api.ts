@@ -7,7 +7,7 @@ import {
   type UseQueryResult,
 } from "@tanstack/react-query";
 import { apiGet, apiPatch, apiPost, type ApiError } from "../../shared/api/client";
-import type { Employee, EmployeeFormValues, Page } from "./types";
+import type { Employee, EmployeeFormValues, EmployeeStatus, Page } from "./types";
 
 export type EmployeeSortField = "lastName" | "departmentId" | "countryId" | "salaryAmount" | "hireDate";
 
@@ -64,7 +64,7 @@ export interface EmployeesQueryParams {
   q?: string;
   departmentId?: string;
   countryId?: string;
-  status?: "active" | "inactive";
+  status?: EmployeeStatus;
 }
 
 export function useEmployeesQuery(params: EmployeesQueryParams): UseQueryResult<Page<Employee>> {

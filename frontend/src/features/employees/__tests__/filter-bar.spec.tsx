@@ -30,7 +30,7 @@ describe("FilterBar", () => {
     expect(searchInput.value).toBe("alice");
   });
 
-  it("calls onChange when department filter is changed", async () => {
+  it("narrows the directory to a chosen department", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
     render(<FilterBar value={{}} onChange={onChange} />);
@@ -46,7 +46,7 @@ describe("FilterBar", () => {
     );
   });
 
-  it("calls onChange when country filter is changed", async () => {
+  it("narrows the directory to a chosen country", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
     render(<FilterBar value={{}} onChange={onChange} />);
@@ -62,7 +62,7 @@ describe("FilterBar", () => {
     );
   });
 
-  it("calls onChange when status filter is changed", async () => {
+  it("narrows the directory to a chosen employment status", async () => {
     const onChange = vi.fn();
     const user = userEvent.setup();
     render(<FilterBar value={{}} onChange={onChange} />);

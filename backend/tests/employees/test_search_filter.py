@@ -91,7 +91,7 @@ def test_a_filter_combination_matching_zero_employees_returns_empty_items_list(
     assert body["total"] == 0
 
 
-def test_filters_still_respect_pagination_and_sorting_from_slice_2(
+def test_combining_a_department_filter_with_pagination_and_sorting_still_returns_a_correctly_ordered_correctly_sized_page(
     client, employee_repository
 ):
     employees = generate_employees(count=100, seed=4)

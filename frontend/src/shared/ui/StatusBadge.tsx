@@ -1,6 +1,7 @@
 import { Chip } from "@mui/material";
+import type { EmployeeStatus } from "../../features/employees/types";
 
-export function StatusBadge(props: Readonly<{ status: "active" | "inactive" }>) {
+export function StatusBadge(props: Readonly<{ status: EmployeeStatus }>) {
   return (
     <Chip
       label={props.status === "active" ? "Active" : "Inactive"}
