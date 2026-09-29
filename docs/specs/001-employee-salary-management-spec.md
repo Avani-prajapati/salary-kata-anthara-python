@@ -182,11 +182,11 @@ From the Profile screen, the HR Manager edits any field — most commonly the sa
 
 **Acceptance criteria**
 
-- [ ] **5.6.1** `PATCH /api/employees/{id}` with a new salary amount updates only the provided fields and returns the full updated record.
-- [ ] **5.6.2** `PATCH /api/employees/{id}` with a negative salary is rejected with 422 and the stored record is unchanged (invariant 4.2).
-- [ ] **5.6.3** `PATCH /api/employees/{id}` changing `country` also updates `salary_currency` to match, never leaving them inconsistent (invariant 4.5).
-- [ ] **5.6.4** `PATCH /api/employees/{id}` for a non-existent id returns 404.
-- [ ] **5.6.5** Editing and re-fetching the same employee reflects the update — no stale cached value shown on the Profile screen after save.
+- [x] **5.6.1** `PATCH /api/employees/{id}` with a new salary amount updates only the provided fields and returns the full updated record.
+- [x] **5.6.2** `PATCH /api/employees/{id}` with a negative salary is rejected with 422 and the stored record is unchanged (invariant 4.2).
+- [x] **5.6.3** `PATCH /api/employees/{id}` changing `country` also updates `salary_currency` to match, never leaving them inconsistent (invariant 4.5).
+- [x] **5.6.4** `PATCH /api/employees/{id}` for a non-existent id returns 404.
+- [x] **5.6.5** Editing and re-fetching the same employee reflects the update — no stale cached value shown on the Profile screen after save.
 
 ### 5.7 Deactivate an employee
 

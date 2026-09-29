@@ -6,7 +6,7 @@ import {
   type UseMutationResult,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import { apiGet, apiPost, type ApiError } from "../../shared/api/client";
+import { apiGet, apiPatch, apiPost, type ApiError } from "../../shared/api/client";
 import type { Employee, EmployeeFormValues, Page } from "./types";
 
 export type EmployeeSortField = "lastName" | "departmentId" | "countryId" | "salaryAmount" | "hireDate";
@@ -128,6 +128,46 @@ export function useCreateEmployeeMutation(): UseMutationResult<Employee, ApiErro
       return mapEmployee(wire);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+    },
+  });
+}
+
+const EMPLOYEE_FIELD_TO_WIRE_KEY: Record<keyof EmployeeFormValues, string> = {
+  firstName: "first_name",
+  lastName: "last_name",
+  email: "email",
+  jobTitle: "job_title",
+  departmentId: "department_id",
+  countryId: "country_id",
+  hireDate: "hire_date",
+  salaryAmount: "salary_amount",
+};
+
+function toEmployeeUpdateWire(values: Partial<EmployeeFormValues>): Record<string, string> {
+  const wire: Record<string, string> = {};
+  for (const [field, value] of Object.entries(values)) {
+    if (value === undefined) continue;
+    wire[EMPLOYEE_FIELD_TO_WIRE_KEY[field as keyof EmployeeFormValues]] = value;
+  }
+  return wire;
+}
+
+export function useUpdateEmployeeMutation(
+  employeeId: number,
+): UseMutationResult<Employee, ApiError, Partial<EmployeeFormValues>> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (values: Partial<EmployeeFormValues>) => {
+      const wire = await apiPatch<EmployeeWire>(
+        `/api/employees/${employeeId}`,
+        toEmployeeUpdateWire(values),
+      );
+      return mapEmployee(wire);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employee", employeeId] });
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });

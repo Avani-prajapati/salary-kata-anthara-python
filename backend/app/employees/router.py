@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.employees.models import EmployeeStatus
 from app.employees.repository import EmployeeRepository
-from app.employees.schemas import EmployeeCreate, EmployeeRead, Page
+from app.employees.schemas import EmployeeCreate, EmployeeRead, EmployeeUpdate, Page
 from app.employees.service import EmployeeService
 
 router = APIRouter(prefix="/api/employees", tags=["employees"])
@@ -56,4 +56,13 @@ def get_employee(employee_id: int, db: Session = Depends(get_db)) -> EmployeeRea
 def create_employee(payload: EmployeeCreate, db: Session = Depends(get_db)) -> EmployeeRead:
     service = EmployeeService(EmployeeRepository(db))
     employee = service.create_employee(payload)
+    return EmployeeRead.model_validate(employee)
+
+
+@router.patch("/{employee_id}", response_model=EmployeeRead)
+def update_employee(
+    employee_id: int, payload: EmployeeUpdate, db: Session = Depends(get_db)
+) -> EmployeeRead:
+    service = EmployeeService(EmployeeRepository(db))
+    employee = service.update_employee(employee_id, payload)
     return EmployeeRead.model_validate(employee)

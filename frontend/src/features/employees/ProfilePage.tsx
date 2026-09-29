@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { Alert, Box, Card, CardContent, CircularProgress, Grid, Typography } from "@mui/material";
+import { Link as RouterLink, useParams } from "react-router-dom";
+import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography } from "@mui/material";
 import { useEmployeeQuery } from "./api";
 
 export function ProfilePage() {
@@ -22,9 +22,14 @@ export function ProfilePage() {
 
   return (
     <Box>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Employee Profile
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Employee Profile
+        </Typography>
+        <Button component={RouterLink} to={`/employees/${employeeId}/edit`} variant="outlined">
+          Edit
+        </Button>
+      </Box>
       <Card>
         <CardContent>
           <Grid container spacing={2}>

@@ -22,6 +22,17 @@ class EmployeeCreate(BaseModel):
     salary_amount: Decimal = Field(gt=0)
 
 
+class EmployeeUpdate(BaseModel):
+    first_name: str | None = None
+    last_name: str | None = None
+    email: EmailStr | None = None
+    job_title: str | None = None
+    department_id: str | None = None
+    country_id: str | None = None
+    hire_date: date | None = None
+    salary_amount: Decimal | None = Field(default=None, gt=0)
+
+
 class EmployeeRead(BaseModel):
     id: int
     first_name: str

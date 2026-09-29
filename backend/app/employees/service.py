@@ -4,7 +4,7 @@ from app.core import reference_data
 from app.core.errors import InvalidReferenceError, NotFoundError
 from app.employees.models import Employee, EmployeeStatus
 from app.employees.repository import EmployeeRepository
-from app.employees.schemas import EmployeeCreate
+from app.employees.schemas import EmployeeCreate, EmployeeUpdate
 
 ALLOWED_SORT_COLUMNS: frozenset[str] = frozenset(
     {"last_name", "department_id", "country_id", "salary_amount", "hire_date"}
@@ -42,6 +42,20 @@ class EmployeeService:
             status=EmployeeStatus.ACTIVE,
         )
         return self.repository.create(employee)
+
+    def update_employee(self, employee_id: int, data: EmployeeUpdate) -> Employee:
+        employee = self.get_employee(employee_id)
+        updates = data.model_dump(exclude_unset=True)
+
+        if "department_id" in updates:
+            reference_data.department_by_id(updates["department_id"])
+        if "country_id" in updates:
+            updates["salary_currency"] = resolve_currency(updates["country_id"])
+
+        for field, value in updates.items():
+            setattr(employee, field, value)
+
+        return self.repository.update(employee)
 
     def list_employees(
         self,

@@ -26,6 +26,11 @@ class EmployeeRepository:
         self.db.refresh(employee)
         return employee
 
+    def update(self, employee: Employee) -> Employee:
+        self.db.commit()
+        self.db.refresh(employee)
+        return employee
+
     def list(
         self,
         *,
