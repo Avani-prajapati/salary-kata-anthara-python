@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from sqlalchemy import asc, desc, func, select
+from sqlalchemy import and_, asc, desc, func, or_, select
 from sqlalchemy.orm import Session
 
-from app.employees.models import Employee
+from app.employees.models import Employee, EmployeeStatus
 
 
 class EmployeeRepository:
@@ -24,16 +24,41 @@ class EmployeeRepository:
         page_size: int,
         sort_by: str,
         sort_dir: str,
+        q: str | None = None,
+        department_id: str | None = None,
+        country_id: str | None = None,
+        status: EmployeeStatus | None = None,
     ) -> tuple[list[Employee], int]:
-        total = self.count_all()
+        query = select(Employee)
+
+        filters = []
+        if q:
+            q_lower = q.lower()
+            filters.append(
+                or_(
+                    func.lower(Employee.first_name).contains(q_lower),
+                    func.lower(Employee.last_name).contains(q_lower),
+                    func.lower(Employee.email).contains(q_lower),
+                )
+            )
+        if department_id is not None:
+            filters.append(Employee.department_id == department_id)
+        if country_id is not None:
+            filters.append(Employee.country_id == country_id)
+        if status is not None:
+            filters.append(Employee.status == status)
+
+        if filters:
+            query = query.where(and_(*filters))
+
+        total = self.db.scalar(select(func.count()).select_from(query.subquery())) or 0
 
         order_column = getattr(Employee, sort_by)
         order_clause = desc(order_column) if sort_dir == "desc" else asc(order_column)
 
         rows = (
             self.db.execute(
-                select(Employee)
-                .order_by(order_clause)
+                query.order_by(order_clause)
                 .offset((page - 1) * page_size)
                 .limit(page_size)
             )

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.core.db import get_db
+from app.employees.models import EmployeeStatus
 from app.employees.repository import EmployeeRepository
 from app.employees.schemas import EmployeeRead, Page
 from app.employees.service import EmployeeService
@@ -19,6 +20,10 @@ def list_employees(
     page_size: int = Query(50, alias="pageSize"),
     sort_by: str = Query("last_name", alias="sortBy"),
     sort_dir: Literal["asc", "desc"] = Query("asc", alias="sortDir"),
+    q: str | None = None,
+    department_id: str | None = Query(None, alias="departmentId"),
+    country_id: str | None = Query(None, alias="countryId"),
+    status: EmployeeStatus | None = None,
     db: Session = Depends(get_db),
 ) -> Page[EmployeeRead]:
     service = EmployeeService(EmployeeRepository(db))
@@ -27,6 +32,10 @@ def list_employees(
         page_size=page_size,
         sort_by=sort_by,
         sort_dir=sort_dir,
+        q=q,
+        department_id=department_id,
+        country_id=country_id,
+        status=status,
     )
     return Page[EmployeeRead](
         items=[EmployeeRead.model_validate(employee) for employee in employees],

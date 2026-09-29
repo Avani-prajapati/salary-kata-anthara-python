@@ -54,6 +54,10 @@ export interface EmployeesQueryParams {
   pageSize: number;
   sortBy: EmployeeSortField;
   sortDir: "asc" | "desc";
+  q?: string;
+  departmentId?: string;
+  countryId?: string;
+  status?: "active" | "inactive";
 }
 
 export function useEmployeesQuery(params: EmployeesQueryParams): UseQueryResult<Page<Employee>> {
@@ -61,12 +65,19 @@ export function useEmployeesQuery(params: EmployeesQueryParams): UseQueryResult<
     queryKey: ["employees", params],
     placeholderData: keepPreviousData,
     queryFn: async () => {
-      const wire = await apiGet<PageWire<EmployeeWire>>("/api/employees", {
+      const queryParams: Record<string, string | number> = {
         page: params.page,
         pageSize: params.pageSize,
         sortBy: SORT_FIELD_TO_WIRE_COLUMN[params.sortBy],
         sortDir: params.sortDir,
-      });
+      };
+
+      if (params.q) queryParams.q = params.q;
+      if (params.departmentId) queryParams.departmentId = params.departmentId;
+      if (params.countryId) queryParams.countryId = params.countryId;
+      if (params.status) queryParams.status = params.status;
+
+      const wire = await apiGet<PageWire<EmployeeWire>>("/api/employees", queryParams);
 
       return {
         items: wire.items.map(mapEmployee),

@@ -7,6 +7,7 @@ import {
   type GridSortModel,
   type GridValueGetterParams,
 } from "@mui/x-data-grid";
+import { FilterBar, type FilterState } from "./FilterBar";
 import { useEmployeesQuery, type EmployeeSortField } from "./api";
 import type { Employee } from "./types";
 
@@ -39,6 +40,7 @@ const COLUMNS: GridColDef<Employee>[] = [
 export function DirectoryPage() {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(DEFAULT_PAGINATION_MODEL);
   const [sortModel, setSortModel] = useState<GridSortModel>(DEFAULT_SORT_MODEL);
+  const [filters, setFilters] = useState<FilterState>({});
 
   const activeSort = sortModel[0];
 
@@ -47,14 +49,24 @@ export function DirectoryPage() {
     pageSize: paginationModel.pageSize,
     sortBy: (activeSort?.field ?? "lastName") as EmployeeSortField,
     sortDir: activeSort?.sort === "desc" ? "desc" : "asc",
+    q: filters.q,
+    departmentId: filters.departmentId,
+    countryId: filters.countryId,
+    status: filters.status,
   });
+
+  const hasNoResults = !isLoading && data?.items.length === 0 && (filters.q || filters.departmentId || filters.countryId || filters.status);
 
   return (
     <Box>
       <Typography variant="h5" component="h1" gutterBottom>
         Employee Directory
       </Typography>
+      <FilterBar value={filters} onChange={setFilters} />
       {isError ? <Alert severity="error">Failed to load employees.</Alert> : null}
+      {hasNoResults ? (
+        <Alert severity="info">No employees match your search or filter criteria.</Alert>
+      ) : null}
       <Box sx={{ width: "100%", overflowX: "auto" }}>
         <DataGrid
           autoHeight

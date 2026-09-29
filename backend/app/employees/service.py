@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from app.core.errors import InvalidReferenceError
-from app.employees.models import Employee
+from app.employees.models import Employee, EmployeeStatus
 from app.employees.repository import EmployeeRepository
 
 ALLOWED_SORT_COLUMNS: frozenset[str] = frozenset(
@@ -20,6 +20,10 @@ class EmployeeService:
         page_size: int,
         sort_by: str,
         sort_dir: str,
+        q: str | None = None,
+        department_id: str | None = None,
+        country_id: str | None = None,
+        status: EmployeeStatus | None = None,
     ) -> tuple[list[Employee], int]:
         if sort_by not in ALLOWED_SORT_COLUMNS:
             raise InvalidReferenceError(f"unsupported sort column: {sort_by!r}")
@@ -29,4 +33,8 @@ class EmployeeService:
             page_size=page_size,
             sort_by=sort_by,
             sort_dir=sort_dir,
+            q=q,
+            department_id=department_id,
+            country_id=country_id,
+            status=status,
         )
