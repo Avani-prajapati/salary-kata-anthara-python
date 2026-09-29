@@ -29,3 +29,11 @@ export const STATUSES: Array<{ id: EmployeeStatus; name: string }> = [
   { id: "active", name: "Active" },
   { id: "inactive", name: "Inactive" },
 ];
+
+export function departmentName(departmentId: string): string {
+  return DEPARTMENTS.find((department) => department.id === departmentId)?.name ?? departmentId;
+}
+
+export function countryName(countryId: string): string {
+  return COUNTRIES.find((country) => country.id === countryId)?.name ?? countryId;
+}

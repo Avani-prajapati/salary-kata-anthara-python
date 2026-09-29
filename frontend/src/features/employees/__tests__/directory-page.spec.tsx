@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import type { ReactElement } from "react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { server } from "../../../test/msw/server";
 import { DirectoryPage } from "../DirectoryPage";
 
@@ -35,6 +35,19 @@ function renderWithProviders(ui: ReactElement) {
   );
 }
 
+function stubViewportMatchMedia(matches: boolean) {
+  window.matchMedia = ((query: string) => ({
+    matches,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  })) as typeof window.matchMedia;
+}
+
 describe("employee directory", () => {
   it("renders a row for every employee in the faked first page of results", async () => {
     server.use(
@@ -55,6 +68,24 @@ describe("employee directory", () => {
 
     expect(await screen.findByText("Ada Lovelace")).toBeInTheDocument();
     expect(screen.getByText("Grace Hopper")).toBeInTheDocument();
+  });
+
+  it("exposes each employee's name as a real link to their profile, reachable by keyboard", async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/api/employees`, () =>
+        HttpResponse.json({
+          items: [employeeWire({ id: 1, first_name: "Ada", last_name: "Lovelace" })],
+          total: 1,
+          page: 1,
+          page_size: 50,
+        }),
+      ),
+    );
+
+    renderWithProviders(<DirectoryPage />);
+
+    const profileLink = await screen.findByRole("link", { name: "Ada Lovelace" });
+    expect(profileLink).toHaveAttribute("href", "/employees/1");
   });
 
   it("re-requests the next page of employees when the pagination control advances", async () => {
@@ -87,5 +118,55 @@ describe("employee directory", () => {
     fireEvent.click(screen.getByRole("button", { name: "Go to next page" }));
 
     expect(await screen.findByText("Katherine Johnson")).toBeInTheDocument();
+  });
+});
+
+describe("employee directory on a narrow viewport", () => {
+  const originalMatchMedia = window.matchMedia;
+
+  beforeEach(() => {
+    stubViewportMatchMedia(true);
+  });
+
+  afterEach(() => {
+    window.matchMedia = originalMatchMedia;
+  });
+
+  it("renders a stacked card per employee showing department, country, salary and status", async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/api/employees`, () =>
+        HttpResponse.json({
+          items: [employeeWire({ id: 1, first_name: "Ada", last_name: "Lovelace" })],
+          total: 1,
+          page: 1,
+          page_size: 50,
+        }),
+      ),
+    );
+
+    renderWithProviders(<DirectoryPage />);
+
+    expect(await screen.findByText("Ada Lovelace")).toBeInTheDocument();
+    expect(screen.getByText("Engineering · United Kingdom")).toBeInTheDocument();
+    expect(screen.getByText("95000.00 GBP")).toBeInTheDocument();
+    expect(screen.getByText("Active")).toBeInTheDocument();
+  });
+
+  it("exposes each employee's card as a real link to their profile, reachable by keyboard", async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/api/employees`, () =>
+        HttpResponse.json({
+          items: [employeeWire({ id: 7, first_name: "Grace", last_name: "Hopper" })],
+          total: 1,
+          page: 1,
+          page_size: 50,
+        }),
+      ),
+    );
+
+    renderWithProviders(<DirectoryPage />);
+
+    const profileLink = await screen.findByRole("link", { name: /Grace Hopper/ });
+    expect(profileLink).toHaveAttribute("href", "/employees/7");
   });
 });

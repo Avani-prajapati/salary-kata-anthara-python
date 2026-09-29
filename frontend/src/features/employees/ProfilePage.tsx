@@ -2,6 +2,18 @@ import { Link as RouterLink, useParams } from "react-router-dom";
 import { Alert, Box, Button, Card, CardContent, CircularProgress, Grid, Typography } from "@mui/material";
 import { StatusBadge } from "../../shared/ui/StatusBadge";
 import { useEmployeeQuery, useDeactivateEmployeeMutation } from "./api";
+import { countryName, departmentName } from "./referenceData";
+
+function ProfileField({ label, value }: Readonly<{ label: string; value: string }>) {
+  return (
+    <Grid item xs={12} sm={6}>
+      <Typography variant="subtitle2" color="textSecondary">
+        {label}
+      </Typography>
+      <Typography variant="body1">{value}</Typography>
+    </Grid>
+  );
+}
 
 export function ProfilePage() {
   const { employeeId: employeeIdParam } = useParams<{ employeeId: string }>();
@@ -13,7 +25,7 @@ export function ProfilePage() {
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "400px" }}>
-        <CircularProgress />
+        <CircularProgress aria-label="Loading employee profile" />
       </Box>
     );
   }
@@ -51,56 +63,17 @@ export function ProfilePage() {
       <Card>
         <CardContent>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                First Name
-              </Typography>
-              <Typography variant="body1">{employee.firstName}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Last Name
-              </Typography>
-              <Typography variant="body1">{employee.lastName}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Email
-              </Typography>
-              <Typography variant="body1">{employee.email}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Job Title
-              </Typography>
-              <Typography variant="body1">{employee.jobTitle}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Department
-              </Typography>
-              <Typography variant="body1">{employee.departmentId}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Country
-              </Typography>
-              <Typography variant="body1">{employee.countryId}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Salary
-              </Typography>
-              <Typography variant="body1">
-                {employee.salaryAmount} {employee.salaryCurrency}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle2" color="textSecondary">
-                Hire Date
-              </Typography>
-              <Typography variant="body1">{employee.hireDate}</Typography>
-            </Grid>
+            <ProfileField label="First Name" value={employee.firstName} />
+            <ProfileField label="Last Name" value={employee.lastName} />
+            <ProfileField label="Email" value={employee.email} />
+            <ProfileField label="Job Title" value={employee.jobTitle} />
+            <ProfileField label="Department" value={departmentName(employee.departmentId)} />
+            <ProfileField label="Country" value={countryName(employee.countryId)} />
+            <ProfileField
+              label="Salary"
+              value={`${employee.salaryAmount} ${employee.salaryCurrency}`}
+            />
+            <ProfileField label="Hire Date" value={employee.hireDate} />
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle2" color="textSecondary">
                 Status
