@@ -127,11 +127,11 @@ On opening the app, the HR Manager sees a table of employees — name, departmen
 
 **Acceptance criteria**
 
-- [ ] **5.2.1** `GET /api/employees?page=1&pageSize=50` returns 50 employees and a total count, not all 10,000, within one response.
-- [ ] **5.2.2** The Directory screen renders the first page of employees within 2 seconds on a local dev environment against the full 10,000-row seeded dataset.
-- [ ] **5.2.3** Clicking a column header (e.g. Salary) re-sorts the table via a server-side sort parameter, not client-side re-sorting of only the loaded page.
-- [ ] **5.2.4** Requesting a page beyond the last available page returns an empty list with a 200 status, not an error.
-- [ ] **5.2.5** The table reflows to a single scrollable column at 320px viewport width without introducing horizontal page scroll (Accessibility Checklist — reflow rule).
+- [x] **5.2.1** `GET /api/employees?page=1&pageSize=50` returns 50 employees and a total count, not all 10,000, within one response.
+- [x] **5.2.2** The Directory screen renders the first page of employees within 2 seconds on a local dev environment against the full 10,000-row seeded dataset.
+- [x] **5.2.3** Clicking a column header (e.g. Salary) re-sorts the table via a server-side sort parameter, not client-side re-sorting of only the loaded page.
+- [x] **5.2.4** Requesting a page beyond the last available page returns an empty list with a 200 status, not an error.
+- [x] **5.2.5** The table reflows to a single scrollable column at 320px viewport width without introducing horizontal page scroll (Accessibility Checklist — reflow rule).
 
 ### 5.3 Search and filter the employee directory
 
