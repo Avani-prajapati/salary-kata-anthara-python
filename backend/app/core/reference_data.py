@@ -33,6 +33,10 @@ class PayBand:
     min_usd: Decimal
     max_usd: Decimal | None
 
+    def contains(self, amount_usd: Decimal) -> bool:
+        is_below_ceiling = self.max_usd is None or amount_usd < self.max_usd
+        return self.min_usd <= amount_usd and is_below_ceiling
+
 
 DEPARTMENTS: tuple[Department, ...] = (
     Department("engineering", "Engineering"),

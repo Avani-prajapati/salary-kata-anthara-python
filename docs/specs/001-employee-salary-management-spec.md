@@ -197,7 +197,7 @@ From the Profile screen, the HR Manager deactivates an employee who has left the
 **Acceptance criteria**
 
 - [x] **5.7.1** `POST /api/employees/{id}/deactivate` sets status to Inactive and returns the updated record; the row still exists afterward (invariant 4.3).
-- [ ] **5.7.2** A deactivated employee is excluded from default (Active-only) aggregate figures anywhere the system reports them, per [invariant 4.4](#4-invariants).
+- [x] **5.7.2** A deactivated employee is excluded from default (Active-only) aggregate figures anywhere the system reports them, per [invariant 4.4](#4-invariants).
 - [x] **5.7.3** Deactivating an already-Inactive employee is idempotent — a second call returns 200 with no error, status stays Inactive.
 - [x] **5.7.4** The Directory and Profile screens visibly label Inactive employees (e.g. a status badge), never hiding the distinction.
 
@@ -222,12 +222,12 @@ The HR Manager opens the Analytics tab and sees, without any further input: head
 
 **Acceptance criteria**
 
-- [ ] **5.8.1** `GET /api/analytics/by-department` returns, per department, active headcount and average/median/min/max salary in that department's employees' native currencies where all employees in a department share one currency, or USD-normalized where they don't (see [§9.4](#9-deferred-follow-ups-and-accepted-limits) for the snapshot-rate caveat).
-- [ ] **5.8.2** `GET /api/analytics/by-country` returns, per country, active headcount and average/median/min/max salary in that country's native currency.
-- [ ] **5.8.3** `GET /api/analytics/pay-bands` returns headcount grouped into fixed USD-normalized salary bands (e.g. <40k, 40-70k, 70-100k, 100-150k, 150k+), computed via the seeded FX snapshot.
-- [ ] **5.8.4** All three analytics endpoints default to Active-only employees; passing `includeInactive=true` recomputes over all employees (invariant 4.4).
-- [ ] **5.8.5** The "Include inactive" toggle's current state is always visibly rendered next to the figures it affects, never implicit.
-- [ ] **5.8.6** Analytics endpoints respond in under 2 seconds against the full 10,000-row seeded dataset (single aggregate SQL query per endpoint, not N+1 per-employee computation in application code).
+- [x] **5.8.1** `GET /api/analytics/by-department` returns, per department, active headcount and average/median/min/max salary in that department's employees' native currencies where all employees in a department share one currency, or USD-normalized where they don't (see [§9.4](#9-deferred-follow-ups-and-accepted-limits) for the snapshot-rate caveat).
+- [x] **5.8.2** `GET /api/analytics/by-country` returns, per country, active headcount and average/median/min/max salary in that country's native currency.
+- [x] **5.8.3** `GET /api/analytics/pay-bands` returns headcount grouped into fixed USD-normalized salary bands (e.g. <40k, 40-70k, 70-100k, 100-150k, 150k+), computed via the seeded FX snapshot.
+- [x] **5.8.4** All three analytics endpoints default to Active-only employees; passing `includeInactive=true` recomputes over all employees (invariant 4.4).
+- [x] **5.8.5** The "Include inactive" toggle's current state is always visibly rendered next to the figures it affects, never implicit.
+- [x] **5.8.6** Analytics endpoints respond in under 2 seconds against the full 10,000-row seeded dataset (single aggregate SQL query per endpoint, not N+1 per-employee computation in application code).
 
 ## 6. NFRs & regulatory compliance
 

@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.analytics.router import router as analytics_router
 from app.core.db import init_db
 from app.core.errors import register_exception_handlers
 from app.employees.router import router as employees_router
@@ -30,3 +31,4 @@ app.add_middleware(
 
 register_exception_handlers(app)
 app.include_router(employees_router)
+app.include_router(analytics_router)
